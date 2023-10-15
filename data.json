@@ -1,0 +1,49 @@
+[
+  {
+    "model": "catalog.category",
+    "pk": 4,
+    "fields": {
+      "name": "Материалы",
+      "description": "Строительные материалы"
+    }
+  },
+  {
+    "model": "catalog.product",
+    "pk": 5,
+    "fields": {
+      "name": "Чашки",
+      "description": "Чашки с узорами",
+      "picture": "",
+      "category": 2,
+      "price": 2000,
+      "date": "2023-10-15",
+      "last_date_chance": "2023-10-15"
+    }
+  },
+    {
+    "model": "catalog.product",
+    "pk": 6,
+    "fields": {
+      "name": "Кофемашина",
+      "description": "Кофемашина Bosch",
+      "picture": "",
+      "category": 3,
+      "price": 55000,
+      "date": "2023-10-15",
+      "last_date_chance": "2023-10-15"
+    }
+  },
+    {
+    "model": "catalog.product",
+    "pk": 7,
+    "fields": {
+      "name": "Бетон",
+      "description": "Бетон марки D400",
+      "picture": "",
+      "category": 4,
+      "price": 50000,
+      "date": "2023-10-15",
+      "last_date_chance": "2023-10-15"
+    }
+  }
+]
