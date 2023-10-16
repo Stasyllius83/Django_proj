@@ -1,6 +1,6 @@
 from django.core.management import BaseCommand
 
-from catalog.models import Product
+from catalog.models import Product, Category
 
 
 class Command(BaseCommand):
@@ -14,6 +14,9 @@ class Command(BaseCommand):
 
         products_for_create = []
         for product_item in product_list:
+            category_id = product_item.pop('category_id')
+            category = Category.objects.get(id=category_id)
+            product_item['category'] = category
             products_for_create.append(
                 Product(**product_item)
             )
