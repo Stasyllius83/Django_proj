@@ -1,18 +1,20 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-<h1>Hi, Sky!</h1>
-<br>
-<form method="post">
-    {% csrf_token %}
-    <input type="text" name="name" /><br>
-    <input type="email" name="email" /><br>
-    <textarea name="message"></textarea><br>
-    <input type="submit" value="Отправить" /><br>
-</form>
-</body>
-</html>
+{% extends 'catalog/base.html' %}
+{% block content %}
+{% for object in object_list %}
+<div class="card mb-4 box-shadow">
+  <div class="card-header">
+    <h4 class="my-0 font-weight-normal">{{object}}</h4>
+  </div>
+  <div class="card-body">
+    <h1 class="card-title pricing-card-title">{{object.price}} </h1>
+    <p>{{ object.body|slice:100 }}</p>
+    <ul class="list-unstyled mt-3 mb-4">
+      <li>Более 10 складов по все стране</li>
+      <li>На любой вкус</li>
+      <li>В наличии</li>
+    </ul>
+    <a class="btn btn-primary" href="{% url 'catalog:product' %}" role="button">Подробности</a>
+  </div>
+</div>
+{% endfor %}
+{% endblock %}
