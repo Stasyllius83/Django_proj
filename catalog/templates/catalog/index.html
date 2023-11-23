@@ -13,7 +13,7 @@
       <li>На любой вкус</li>
       <li>В наличии</li>
     </ul>
-    <a class="btn btn-primary" href="{% url 'catalog:product' %}" role="button">Подробности</a>
+    <a class="btn btn-primary" href="{% url 'catalog:product' pk=pk %}" role="button">Подробности</a>
   </div>
 </div>
 {% endfor %}
