@@ -16,9 +16,12 @@
       <h2>Напишите нам</h2>
       <form method="post">
         {% csrf_token %}
-        <input class="form-control mb-2" name="name" />
-        <input class="form-control mb-2" name="email" />
-        <textarea class="form-control mb-2" name="message"></textarea>
+        <label for="name">Имя</label>
+        <input type="text" name="name" class="form-control" id="name" placeholder="Ваше имя" required>
+        <label for="email">Почта</label>
+        <input type="text" name="email" class="form-control" id="email" placeholder="Контактная почта" required>
+        <label for="message">Сообщение</label>
+        <textarea type="text" name="message" class="form-control" id="message" placeholder="Ваше сообщение" required></textarea>
         <button type="submit" class="btn btn-primary form-control">Отравить</button>
       </form>
     </div>
