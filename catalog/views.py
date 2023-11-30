@@ -1,6 +1,6 @@
 from django.shortcuts import render
 
-from catalog.models import Product
+from catalog.models import Product, Category
 
 
 
@@ -31,3 +31,12 @@ def product(request, pk):
         'object': Product.objects.get(pk=pk)
     }
     return render(request, 'catalog/product.html', context)
+
+
+def category_index(request):
+    category_all = Category.objects.all()
+    context = {
+        'category_list': category_all,
+        'title': 'Категории'
+    }
+    return render(request, 'catalog/category_list.html', context)
