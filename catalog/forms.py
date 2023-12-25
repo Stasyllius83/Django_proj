@@ -20,16 +20,13 @@ class ProductForm(StylyFormMixin, forms.ModelForm):
 
     def clean_name(self):
         cleaned_data = self.cleaned_data['name'].lower()
-        print(cleaned_data)
         for word in self.Prohibited_Products:
-            print(word)
             if word in cleaned_data:
                 raise forms.ValidationError('Запрещенное имя продукта')
         return cleaned_data
 
     def clean_description(self):
         cleaned_data = self.cleaned_data['description'].lower()
-        print(cleaned_data)
         for word in self.Prohibited_Products:
             if word in cleaned_data:
                 raise forms.ValidationError('Запрещенные слова в описании продукта')
