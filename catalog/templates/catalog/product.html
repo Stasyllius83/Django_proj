@@ -10,8 +10,15 @@
                 </div>
                 <div class="card-body">
                     <img src="{{ object.picture|mediapath }}" class="card-img-top" />
-                    <p>{{ object.description }}</p>
-                    <p class="card-text">Категория: {{ object.description }}</p>
+                    <p class="card-text">Категория: {{ object.category.description }}</p>
+                    <p class="card-text">Описание: {{ object.description }}</p>
+                    <p class="card-text">
+                        {% for v_item in object.version_set.all %}
+                            {% if v_item.status_version %}
+                                <span class="text-muted">Версия: {{ v_item.name_version }}(#{{ v_item.num_version }})</span>
+                            {% endif %}
+                            {% endfor %}
+                    </p>
                     <ul class="list-unstyled mt-3 mb-4">
                         <li>Более 10 складов по все стране</li>
                         <li>На любой вкус</li>
