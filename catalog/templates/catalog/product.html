@@ -12,6 +12,8 @@
                     <img src="{{ object.picture|mediapath }}" class="card-img-top" />
                     <p class="card-text">Категория: {{ object.category.description }}</p>
                     <p class="card-text">Описание: {{ object.description }}</p>
+                    <span class="text-muted">Дата создания: {{ object.date|default:"-" }}</span><br>
+                    <span class="text-muted">Дата создания: {{ object.owner|default:"-" }}</span>
                     <p class="card-text">
                         {% for v_item in object.version_set.all %}
                             {% if v_item.status_version %}
@@ -20,7 +22,7 @@
                             {% endfor %}
                     </p>
                     <ul class="list-unstyled mt-3 mb-4">
-                        <li>Более 10 складов по все стране</li>
+                        <li>Более 10 складов по всей стране</li>
                         <li>На любой вкус</li>
                         <li>В наличии</li>
                     </ul>

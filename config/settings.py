@@ -38,7 +38,8 @@ INSTALLED_APPS = [
 
     'catalog',
     'blog',
-    'order'
+    'order',
+    'users'
 ]
 
 MIDDLEWARE = [
@@ -135,3 +136,9 @@ EMAIL_PORT = 465
 EMAIL_HOST_USER = 'staslaty@bk.ru'
 EMAIL_HOST_PASSWORD = 'qJ4Bf9N2TxLD7QN0GeB3'
 EMAIL_USE_SSL = True
+
+AUTH_USER_MODEL = 'users.User'
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
+
+
