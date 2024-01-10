@@ -58,6 +58,12 @@ class RegistrView(CreateView):
     template_name = 'users/register.html'
     success_url = reverse_lazy('users:login')
 
+    # def get(self, request):
+    #    context = {
+    #        'form': UserRegisterForm()
+    #    }
+    #    return render(request, self.template_name, context)
+
     def post(self, request):
         form = UserRegisterForm(request.POST)
 

@@ -10,7 +10,7 @@ from users.service import send_email_for_verify
 class UserAuthenticationForm(AuthenticationForm):
     def clean(self):
         username = self.cleaned_data.get("username")
-        password = self.cleaned_data.get("password")
+        password = self.cleaned_data.get("password1")
 
         if username is not None and password:
             self.user_cache = authenticate(
