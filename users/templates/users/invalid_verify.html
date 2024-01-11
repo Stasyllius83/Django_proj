@@ -2,6 +2,8 @@
 {% block content %}
 <div class="row">
     <p>Ваша ссылка некорректна, авторизируйтесь повторно</p>
-    <a href="{% url 'login' %}">Авторизоваться</a>
+    <div class="col-6">
+        <a href="{% url 'users:login' %}">Авторизоваться</a>
+    </div>
 </div>
 {% endblock %}

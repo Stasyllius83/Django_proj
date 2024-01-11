@@ -18,11 +18,10 @@ from django.contrib.auth.tokens import default_token_generator as token_generato
 User = get_user_model()
 
 class LoginView(BaseLoginView):
-    template_name = 'user/login.html'
     form_class = UserAuthenticationForm
 
 class LogoutView(BaseLogoutView):
-    template_name = 'user/logout.html'
+    template_name = 'users/logout.html'
 
 class EmailVerify(View):
 
@@ -34,7 +33,7 @@ class EmailVerify(View):
             user.save()
             login(request, user)
             return redirect('catalog:index')
-        return redirect('invalid_verify')
+        return redirect('users:invalid_verify')
 
     @staticmethod
     def get_user(uidb64):
@@ -56,24 +55,20 @@ class RegistrView(CreateView):
     model = User
     form_class = UserRegisterForm
     template_name = 'users/register.html'
-    success_url = reverse_lazy('users:login')
-
-    # def get(self, request):
-    #    context = {
-    #        'form': UserRegisterForm()
-    #    }
-    #    return render(request, self.template_name, context)
+    # success_url = reverse_lazy('users:login')
 
     def post(self, request):
         form = UserRegisterForm(request.POST)
 
         if form.is_valid():
-            form.save()
+            user=form.save()
+            # user.is_active = False
+            user.save()
             email = form.cleaned_data.get('email')
             password = form.cleaned_data.get('password1')
             user = authenticate(email=email, password=password)
             send_email_for_verify(request, user)
-            return redirect('confirm_email')
+            return redirect('users:confirm_email')
         context = {
             'form' : form
         }

@@ -8,7 +8,7 @@ app_name = UsersConfig.name
 
 
 urlpatterns = [
-    path('', LoginView.as_view(), name='login'),
+    path('', LoginView.as_view(template_name='users/login.html'), name='login'),
     path('logout/', LogoutView.as_view(), name='logout'),
     path('invalid_verify/', TemplateView.as_view(template_name='users/invalid_verify.html'), name='invalid_verify'),
     path('verify_email/<uidb64>/<token>/', EmailVerify.as_view(), name='verify_email'),

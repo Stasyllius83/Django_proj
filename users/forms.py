@@ -3,7 +3,6 @@ from django import forms
 from users.models import User
 from django.contrib.auth import authenticate
 from django.core.exceptions import ValidationError
-
 from users.service import send_email_for_verify
 
 
