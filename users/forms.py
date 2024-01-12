@@ -15,7 +15,7 @@ class UserAuthenticationForm(AuthenticationForm):
             self.user_cache = authenticate(
                 self.request, username=username, password=password
             )
-            if not self.user_cache.email_verify:
+            if not self.user_cache.is_active:
                 send_email_for_verify(self.request, self.user_cache)
                 raise ValidationError(
                     'Email not verify, check your email',

@@ -1,11 +1,13 @@
 
+import random
 from django.shortcuts import redirect, render
-from django.urls import reverse_lazy
+from django.urls import reverse, reverse_lazy
 from django.views import View
 from django.views.generic import CreateView, UpdateView
+from config.settings import EMAIL_HOST_USER
 from users.forms import UserAuthenticationForm, UserProfileForm, UserRegisterForm
 from users.models import User
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import login
 from users.service import send_email_for_verify
 from django.contrib.auth.views import LoginView as BaseLoginView
 from django.contrib.auth.views import LogoutView as BaseLogoutView
@@ -13,6 +15,7 @@ from django.utils.http import urlsafe_base64_decode
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.contrib.auth.tokens import default_token_generator as token_generator
+from django.core.mail import send_mail
 
 
 User = get_user_model()
@@ -29,7 +32,7 @@ class EmailVerify(View):
         user = self.get_user(uidb64)
 
         if user is not None and token_generator.check_token(user, token):
-            user.email_verify = True
+            user.is_active = True
             user.save()
             login(request, user)
             return redirect('catalog:index')
@@ -55,24 +58,17 @@ class RegistrView(CreateView):
     model = User
     form_class = UserRegisterForm
     template_name = 'users/register.html'
-    # success_url = reverse_lazy('users:login')
 
     def post(self, request):
         form = UserRegisterForm(request.POST)
 
         if form.is_valid():
             user=form.save()
-            # user.is_active = False
+            user.is_active = False
             user.save()
-            email = form.cleaned_data.get('email')
-            password = form.cleaned_data.get('password1')
-            user = authenticate(email=email, password=password)
             send_email_for_verify(request, user)
             return redirect('users:confirm_email')
-        context = {
-            'form' : form
-        }
-        return render(request, self.template_name, context)
+        return redirect(reverse('users:login'))
 
 class ProfileView(UpdateView):
     model = User
@@ -81,3 +77,22 @@ class ProfileView(UpdateView):
 
     def get_object(self, queryset=None):
         return self.request.user
+
+def forgot_password(request):
+    if request.method == "POST":
+        email = request.POST.get('user_email')
+        try:
+            user = User.objects.get(email=email)
+            new_password = ''.join([str(random.randint(0, 9)) for _ in range(12)])
+            send_mail(subject='new_password', message=f'{new_password}', from_email=EMAIL_HOST_USER, recipient_list=[user.email])
+            user.set_password(new_password)
+            user.save()
+            return redirect(reverse('users:login'))
+        except Exception:
+            message = 'Мы не нашли такого пользователя'
+            context = {
+                'message': message,
+            }
+            return render(request, 'users/forgot_password.html', context)
+    else:
+        return render(request, 'users/forgot_password.html')

@@ -2,7 +2,8 @@ from django.urls import path
 from django.contrib.auth.views import LoginView, LogoutView
 from django.views.generic import TemplateView
 from users.apps import UsersConfig
-from users.views import EmailVerify, RegistrView, ProfileView
+from users.views import EmailVerify, RegistrView, ProfileView, forgot_password
+from django.contrib.auth import views
 
 app_name = UsersConfig.name
 
@@ -14,5 +15,6 @@ urlpatterns = [
     path('verify_email/<uidb64>/<token>/', EmailVerify.as_view(), name='verify_email'),
     path('confirm_email/', TemplateView.as_view(template_name='users/confirm_email.html'), name='confirm_email'),
     path('register/', RegistrView.as_view(), name='register'),
+    path('forgot/', forgot_password, name='forgot'),
     path('profile/', ProfileView.as_view(), name='profile'),
 ]
