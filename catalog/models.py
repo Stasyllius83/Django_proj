@@ -19,15 +19,18 @@ class Category(models.Model):
 
 
 class Product(models.Model):
+
     name = models.CharField(max_length=100, verbose_name='наименование')
     description = models.CharField(max_length=250, verbose_name='описание')
     picture = models.ImageField(upload_to='product/', verbose_name='изображение', **NULLABLE)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, verbose_name='категория')
     price = models.IntegerField(verbose_name='цена')
     date = models.DateField(verbose_name='дата создания')
-    last_date_chance = models.DateField(verbose_name='дата последнего изменения')
+    last_date_change = models.DateField(verbose_name='дата последнего изменения')
 
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, **NULLABLE, verbose_name='продавец')
+
+    is_published = models.BooleanField(default=False, verbose_name='признак публикации')
 
     def __str__(self):
         # Строковое отображение объекта
@@ -36,6 +39,11 @@ class Product(models.Model):
     class Meta:
         verbose_name = 'продукт'
         verbose_name_plural = 'продукты'
+        permissions = [
+            ('set_is_published', 'Может менять статус публикации'),
+            ('set_description', 'Может изменять описание'),
+            ('set_category', 'Может изменять категорию'),
+        ]
 
 
 class Version(models.Model):

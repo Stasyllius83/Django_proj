@@ -14,7 +14,8 @@
       <li>Более 10 складов по всей стране</li>
       <li>На любой вкус</li>
       <li>В наличии</li>
- {#     <a class="btn btn-lg btn-block btn-outline-primary" href="{% url 'catalog:category_products' object.pk %}">Посмотреть</a>#}
+      <a class="btn btn-lg btn-block btn-outline-primary"
+        href="{% url 'catalog:category_products' category.pk %}">Посмотреть</a>
     </ul>
   </div>
 </div>

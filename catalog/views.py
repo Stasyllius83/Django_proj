@@ -2,14 +2,15 @@
 from django.forms import inlineformset_factory
 from django.shortcuts import render
 from django.urls import reverse_lazy
-from django.views.generic import ListView, DetailView, CreateView, UpdateView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from catalog.forms import ProductForm, VersionForm
 from catalog.models import Product, Category, Version
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin
+from django.contrib.auth.decorators import login_required
 
 
 
-class ProductListView(ListView):
+class ProductListView(LoginRequiredMixin, ListView):
     model = Product
     template_name = 'catalog/index.html'
 
@@ -27,12 +28,12 @@ def contact(request):
     return render(request, 'catalog/contact.html', context)
 
 
-class ProductDetailView(DetailView):
+class ProductDetailView(LoginRequiredMixin, DetailView):
     model = Product
     template_name = 'catalog/product.html'
 
 
-class CategoryListView(ListView):
+class CategoryListView(LoginRequiredMixin, ListView):
     model = Category
     template_name = 'catalog/category_list'
 
@@ -42,7 +43,7 @@ class CategoryListView(ListView):
         return context_data
 
 
-class CategoryProduct(ListView):
+class CategoryProduct(LoginRequiredMixin, ListView):
     model = Product
     template_name = 'catalog/category_products.html'
 
@@ -51,7 +52,7 @@ class CategoryProduct(ListView):
         queryset = queryset.filter(category_id=self.kwargs.get('pk'))
         return queryset
 
-    def get_context_data(self, args, **kwargs):
+    def get_context_data(self, *args, **kwargs):
         context_data = super().get_context_data(*args,**kwargs)
         category_item = Category.objects.get(pk=self.kwargs.get('pk'))
         context_data['category_pk'] = category_item.pk,
@@ -63,7 +64,6 @@ class ProductCreateView(LoginRequiredMixin, CreateView):
     model = Product
     form_class = ProductForm
     success_url = reverse_lazy('catalog:index')
-    login_url = '/users/'
 
 
     def form_valid(self, form):
@@ -82,11 +82,10 @@ class ProductCreateView(LoginRequiredMixin, CreateView):
         return context_data
 
 
-class ProductUpdateView(LoginRequiredMixin, UpdateView):
+class ProductUpdateView(UserPassesTestMixin, UpdateView):
     model = Product
     form_class = ProductForm
     success_url = reverse_lazy('catalog:index')
-    login_url = '/users/'
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
@@ -105,3 +104,25 @@ class ProductUpdateView(LoginRequiredMixin, UpdateView):
             formset.save()
 
         return super().form_valid(form)
+
+    def test_func(self):
+        return self.get_object().owner == self.request.user or self.request.user.is_superuser \
+              or self.request.user.has_perms(['catalog.change_product'])
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        if self.request.user != self.get_object().owner:
+            fields = [i for i in form.fields]
+            for field in fields:
+                if not self.request.user.has_perm(f'catalog.set_{field}'):
+                    del form.fields[field]
+        return form
+
+
+class ProductDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Product
+    success_url = reverse_lazy('catalog:index')
+
+    def test_func(self):
+        return self.get_object().owner == self.request.user or self.request.user.is_superuser \
+            or self.request.user.has_perms(['catalog.delete_product'])

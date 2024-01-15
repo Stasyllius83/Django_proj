@@ -1,13 +1,28 @@
 {% extends 'catalog/base.html' %}
 {% block content %}
 {% load my_tags %}
-{% for product in category_list %}
+{% for object in object_list %}
 <div class="card mb-4 box-shadow">
     <div class="card-header">
-        <h4 class="my-0 font-weight-normal">{{category.name}}</h4>
+        <h4 class="my-0 font-weight-normal">{{object.name}}</h4>
     </div>
     <div class="card-body">
-
+        <h1 class="card-title pricing-card-title">{{object.price}} руб.</h1>
+        <p>{{ object.body|slice:100 }}</p>
+        <ul class="list-unstyled mt-3 mb-4">
+            <li>Более 10 складов по всей стране</li>
+            <li>На любой вкус</li>
+            <li>В наличии</li>
+        </ul>
+        <a class="btn btn-primary" href="{% url 'catalog:product' pk=object.pk %}" role="button">Подробности</a>
+        {% if perms.catalog.change_product or product.owner == user %}
+        <a href="{% url 'catalog:update_product' object.pk %}" type="button"
+            class="btn btn-sm btn-outline-secondary">Изменить</a>
+        {% endif %}
+        {% if perms.catalog.delete_product or product.owner == user %}
+        <a href="{% url 'catalog:delete_product' object.pk %}" type="button"
+            class="btn btn-sm btn-outline-danger">Удалить</a>
+        {% endif %}
     </div>
 </div>
 {% endfor %}

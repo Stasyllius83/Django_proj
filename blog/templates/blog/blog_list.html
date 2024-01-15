@@ -13,8 +13,12 @@
         <div class="d-flex justify-content-between align-items-center">
             <div class="btn-group">
                 <a href="{% url 'blog:view' object.pk %}" class="btn btn-sm btn-outline-secondary">View</a>
+                {% if perms.blog.change_blog or post.author == user %}
                 <a href="{% url 'blog:edit' object.pk %}" class="btn btn-sm btn-outline-secondary">Edit</a>
+                {% endif %}
+                {% if perms.blog.delete_blog or post.author == user %}
                 <a href="{% url 'blog:delete' object.pk %}" class="btn btn-sm btn-outline-danger">Delete</a>
+                {% endif %}
             </div>
         </div>
     </div>

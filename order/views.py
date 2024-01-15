@@ -4,8 +4,10 @@ from django.views.generic import CreateView
 from order.models import Order
 from catalog.models import Product
 from order.services import send_order_email
+from django.contrib.auth.mixins import LoginRequiredMixin
 
-class OrderCreateView(CreateView):
+
+class OrderCreateView(LoginRequiredMixin, CreateView):
     model = Order
     fields = ('product', 'name', 'email', 'message',)
 
