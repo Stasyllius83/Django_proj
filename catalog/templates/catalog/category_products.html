@@ -1,6 +1,7 @@
 {% extends 'catalog/base.html' %}
 {% block content %}
-{% load my_tags %}
+{% load my_tag_media %}
+{% load my_tag_group %}
 {% for object in object_list %}
 <div class="card mb-4 box-shadow">
     <div class="card-header">
@@ -15,11 +16,11 @@
             <li>В наличии</li>
         </ul>
         <a class="btn btn-primary" href="{% url 'catalog:product' pk=object.pk %}" role="button">Подробности</a>
-        {% if perms.catalog.change_product or product.owner == user %}
+        {% if request.user|has_group:"модератор" or user.is_superuser or product.owner == user %}
         <a href="{% url 'catalog:update_product' object.pk %}" type="button"
             class="btn btn-sm btn-outline-secondary">Изменить</a>
         {% endif %}
-        {% if perms.catalog.delete_product or product.owner == user %}
+        {% if user.is_superuser or product.owner == user %}
         <a href="{% url 'catalog:delete_product' object.pk %}" type="button"
             class="btn btn-sm btn-outline-danger">Удалить</a>
         {% endif %}

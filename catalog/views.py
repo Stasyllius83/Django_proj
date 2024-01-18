@@ -7,6 +7,7 @@ from catalog.forms import ProductForm, VersionForm
 from catalog.models import Product, Category, Version
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.decorators import login_required
+from catalog.services import get_cached_category
 
 
 
@@ -40,6 +41,7 @@ class CategoryListView(LoginRequiredMixin, ListView):
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
         context_data['title'] = 'Категории Товаров'
+        context_data['object_list'] = get_cached_category()
         return context_data
 
 

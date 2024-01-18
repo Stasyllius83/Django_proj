@@ -1,6 +1,7 @@
 {% extends 'catalog/base.html' %}
 {% block content %}
-{% load my_tags %}
+{% load my_tag_media %}
+{% load my_tag_group %}
 <div class="col-11">
   <div class="card mb-5">
     <a class="btn btn-outline-primary" href="{% url 'catalog:create_product' %}">Добавить продукт</a>
@@ -20,7 +21,7 @@
       <li>В наличии</li>
     </ul>
     <a class="btn btn-primary" href="{% url 'catalog:product' pk=object.pk %}" role="button">Подробности</a>
-    {% if user.is_staff or product.owner == user %}
+    {% if request.user|has_group:"модератор" or user.is_superuser or product.owner == user %}
     <a href="{% url 'catalog:update_product' object.pk %}" type="button" class="btn btn-sm btn-outline-secondary">Изменить</a>
     {% endif %}
     {% if user.is_superuser or product.owner == user %}
